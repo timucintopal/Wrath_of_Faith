@@ -1,13 +1,39 @@
+using System.Collections;
+using DG.Tweening;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public enum PlayerStatus
 {
+    Idle,
+    Moving,
+    SwitchingMode,
+    God
+}
+
+public class PlayerMovement : Singleton<PlayerMovement>
+{
+    [SerializeField] AnimationController _animationController;
+    
     CharacterController _characterController;
+    
+
+    [SerializeField] ProphetModes currentMode = ProphetModes.Human;
+
+    PlayerStatus _playerStatus;
     public int speed = 5;
     public int rotationSpeed = 5;
-
     Vector3 movementDirection;
-    
+
+    public PlayerStatus PlayerStatus
+    {
+        get => _playerStatus;
+        set
+        {
+            _playerStatus = value;
+            
+        }
+    }
+
     private void Awake()
     {
         _characterController = GetComponent<CharacterController>();
@@ -17,15 +43,18 @@ public class PlayerMovement : MonoBehaviour
     {
         M_Input.DirectionInput += Move;
         M_Input.MouseGroundInput += LookAt;
+
+        M_ModeBar.ModeChanged += SwitchMode;
     }
 
     public void Move(Vector3 moveDir)
     {
-        Debug.Log("Dir " + moveDir);
+        if(PlayerStatus != PlayerStatus.SwitchingMode)
+        {
+            movementDirection = (moveDir.z * transform.forward) + (moveDir.x * transform.right);
 
-        movementDirection = (moveDir.z * transform.forward) + (moveDir.x * transform.right);
-        
-        _characterController.Move(movementDirection * Time.deltaTime * speed);
+            _characterController.Move(movementDirection * Time.deltaTime * speed);
+        }
     }
 
     void LookAt(Vector3 lookPos)
@@ -42,5 +71,58 @@ public class PlayerMovement : MonoBehaviour
 
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
     }
-    
+
+    void SwitchMode(ProphetModes newMode)
+    {
+        currentMode = newMode;
+        switch (currentMode)
+        {
+            case ProphetModes.Human:
+                StartCoroutine(ActivateProphet());
+                
+                break;
+            case ProphetModes.God:
+                StartCoroutine(ActivateGodMode());
+                break;
+        }
+    }
+
+    IEnumerator ActivateProphet()
+    {
+        Debug.Log("ACTIVE PROPHET");
+        bool isStanded = false;
+        _animationController.Standed += ()=> isStanded = true;
+        
+        transform.DOMoveY(20, 0);
+        
+        transform.DOMoveY(1, .5f).SetEase(Ease.Linear);
+        
+        // yield return new WaitUntil()
+        
+        yield return new WaitForSeconds(.05f);
+        _animationController.SkyJump();
+
+        
+        
+        // Debug.Log("ACTIVE " );
+
+        yield return new WaitUntil(()=> isStanded);
+
+        PlayerStatus = PlayerStatus.Idle;
+    }
+
+
+    IEnumerator ActivateGodMode()
+    {
+        PlayerStatus = PlayerStatus.SwitchingMode;
+
+        yield return new WaitUntil(() => _characterController.velocity == Vector3.zero);
+        
+        bool isGround = true;
+
+        transform.DOMoveY(20, .5f);
+        yield return new WaitForSeconds(.75f);
+
+        PlayerStatus = PlayerStatus.God;
+    }
 }

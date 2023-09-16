@@ -1,5 +1,3 @@
-using System;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -12,7 +10,6 @@ public enum ProphetModes
 
 public class M_ModeBar : Singleton<M_ModeBar>
 {
-    
     [SerializeField] Button HumanBtn;
     [SerializeField] Button GodBtn;
 
@@ -39,6 +36,7 @@ public class M_ModeBar : Singleton<M_ModeBar>
     }
 
     public static UnityAction<ProphetModes> ModeChanged;
+    
     
 
     private void Awake()

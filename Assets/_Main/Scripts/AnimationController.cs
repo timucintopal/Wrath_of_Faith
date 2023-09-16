@@ -1,19 +1,20 @@
-using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class AnimationController : MonoBehaviour
 {
     [SerializeField] CharacterController _characterController;
     [SerializeField] Animator _animator;
+    [SerializeField] ParticleController _particleController;
     private static readonly int VelocityX = Animator.StringToHash("VelocityX");
     private static readonly int VelocityZ = Animator.StringToHash("VelocityZ");
 
-    [SerializeField] float VelocityThreshold = 0.05f;
-
+    float VelocityThreshold = 0.05f;
 
     private float divideVelo = 1;
-    
-    
+    private static readonly int Jump = Animator.StringToHash("SkyJump");
+
+    public UnityAction Standed;
 
     private void Awake()
     {
@@ -22,15 +23,17 @@ public class AnimationController : MonoBehaviour
 
     private void OnEnable()
     {
-        M_Input.DirectionInput += MoveX;
+        M_Input.DirectionInput += Move;
     }
 
-    private void Update()
+    void JumpCall()
     {
-        // MoveX();
+        Debug.Log("Jump Call!");
+        M_Camera.I.Shake();
+        _particleController.PlayParticle(0);
     }
 
-    public void MoveX(Vector3 newVal)
+    public void Move(Vector3 newVal)
     {
         // var value = _characterController.velocity;
         var value = newVal;
@@ -45,17 +48,20 @@ public class AnimationController : MonoBehaviour
         
         if (Mathf.Abs(value.z) < VelocityThreshold)
             value -= value.z * Vector3.forward;
-
-        
-        // _animator.SetFloat(VelocityX, Mathf.Clamp(value.x, VelocityThreshold, 1));
-        // _animator.SetFloat(VelocityZ, Mathf.Clamp(value.z, VelocityThreshold, 1));
         
         _animator.SetFloat(VelocityX, value.x);
         _animator.SetFloat(VelocityZ, value.z);
     }
-    
-    public void MoveZ(float value)
+
+    public void SkyJump()
     {
-        
+        _animator.SetTrigger(Jump);
     }
+
+    public void Stand()
+    {
+        Standed?.Invoke();
+    }
+    
+   
 }

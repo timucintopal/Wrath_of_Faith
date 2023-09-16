@@ -1,18 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
-public class M_Camera : MonoBehaviour
+public class M_Camera : Singleton<M_Camera>
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] float shakeDuration = .5f;
+    [SerializeField] float shakeStrength = .5f;
 
-    // Update is called once per frame
-    void Update()
+    [ContextMenu("Shake")]
+    public void Shake()
     {
-        
+        transform.DOShakePosition(shakeDuration, shakeStrength).SetEase(Ease.OutQuad);
     }
 }
