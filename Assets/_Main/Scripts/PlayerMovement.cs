@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -18,7 +17,6 @@ public class PlayerMovement : MonoBehaviour
     {
         M_Input.DirectionInput += Move;
         M_Input.MouseGroundInput += LookAt;
-
     }
 
     public void Move(Vector3 moveDir)
@@ -44,4 +42,5 @@ public class PlayerMovement : MonoBehaviour
 
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
     }
+    
 }
