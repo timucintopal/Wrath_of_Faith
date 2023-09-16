@@ -100,9 +100,7 @@ public class PlayerMovement : Singleton<PlayerMovement>
         // yield return new WaitUntil()
         
         yield return new WaitForSeconds(.05f);
-        _animationController.SkyJump();
-
-        
+        _animationController.SkyDive();
         
         // Debug.Log("ACTIVE " );
 
@@ -111,17 +109,26 @@ public class PlayerMovement : Singleton<PlayerMovement>
         PlayerStatus = PlayerStatus.Idle;
     }
 
-
+    
     IEnumerator ActivateGodMode()
     {
+        bool jumpStart = false;
+        
+        _animationController.OnJumpStart += ()=> jumpStart = true;
+        
         PlayerStatus = PlayerStatus.SwitchingMode;
 
         yield return new WaitUntil(() => _characterController.velocity == Vector3.zero);
         
         bool isGround = true;
+        
+        _animationController.SkyJump();
 
-        transform.DOMoveY(20, .5f);
-        yield return new WaitForSeconds(.75f);
+        yield return new WaitUntil(() => jumpStart);
+        
+
+        transform.DOMoveY(20, .5f).SetDelay(.1f).OnComplete(()=> PlayerStatus = PlayerStatus.God);
+        // yield return new WaitForSeconds(.75f);
 
         PlayerStatus = PlayerStatus.God;
     }

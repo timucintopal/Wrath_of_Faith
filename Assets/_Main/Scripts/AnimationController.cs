@@ -12,9 +12,13 @@ public class AnimationController : MonoBehaviour
     float VelocityThreshold = 0.05f;
 
     private float divideVelo = 1;
+    
+    private static readonly int Fall = Animator.StringToHash("SkyFall");
     private static readonly int Jump = Animator.StringToHash("SkyJump");
 
     public UnityAction Standed;
+
+    public UnityAction OnJumpStart;
 
     private void Awake()
     {
@@ -29,6 +33,13 @@ public class AnimationController : MonoBehaviour
     void JumpCall()
     {
         Debug.Log("Jump Call!");
+        M_Camera.I.Shake();
+        _particleController.PlayParticle(0);
+    }
+
+    void JumpStart()
+    {
+        OnJumpStart?.Invoke();
         M_Camera.I.Shake();
         _particleController.PlayParticle(0);
     }
@@ -53,6 +64,11 @@ public class AnimationController : MonoBehaviour
         _animator.SetFloat(VelocityZ, value.z);
     }
 
+    public void SkyDive()
+    {
+        _animator.SetTrigger(Fall);
+    }
+    
     public void SkyJump()
     {
         _animator.SetTrigger(Jump);
