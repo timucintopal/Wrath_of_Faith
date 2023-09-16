@@ -8,13 +8,18 @@ public class M_Input : MonoBehaviour
 
     public bool isActive = true;
 
-    Vector3Int _movementDirection;
+    [SerializeField]Vector3Int movementDirection;
 
     public static UnityAction<Vector3> DirectionInput;
     public static UnityAction<Vector3> MouseGroundInput;
 
     RaycastHit _hit;
-    Vector3 mouseGroundPos;
+    Vector3 _mouseGroundPos;
+
+    [SerializeReference] Vector3 lastDir = Vector3.zero;
+    [SerializeField] float inputThreshold = .1f;
+
+    public float speed = 5; 
 
     private void OnEnable()
     {
@@ -26,6 +31,8 @@ public class M_Input : MonoBehaviour
         _currentMode = newMode;
     }
 
+    Vector3 refValue = Vector3.zero;
+    
     private void Update()
     {
         if(!isActive) return;
@@ -33,22 +40,30 @@ public class M_Input : MonoBehaviour
         switch (_currentMode)
         {
             case ProphetModes.Human:
-                _movementDirection = Vector3Int.zero;                
+                movementDirection = Vector3Int.zero;                
                 if (Input.GetKey(KeyCode.W))
-                    _movementDirection += Vector3Int.forward;
+                    movementDirection += Vector3Int.forward;
                 if (Input.GetKey(KeyCode.A))
-                    _movementDirection += Vector3Int.left;
+                    movementDirection += Vector3Int.left;
                 if (Input.GetKey(KeyCode.S))
-                    _movementDirection += Vector3Int.back;
+                    movementDirection += Vector3Int.back;
                 if (Input.GetKey(KeyCode.D))
-                    _movementDirection += Vector3Int.right;
+                    movementDirection += Vector3Int.right;
+
+                // Vector3.SmoothDamp(lastDir, _movementDirection, ref refValue, speed);
+
+                lastDir = Vector3.Lerp(lastDir, movementDirection, speed * Time.deltaTime);
+                DirectionInput?.Invoke(lastDir);
                 
-                DirectionInput?.Invoke(_movementDirection);
                 
                 if(Input.GetMouseButton(0))
                     if(Ray())
-                        MouseGroundInput?.Invoke(mouseGroundPos);
-                
+                        MouseGroundInput?.Invoke(_mouseGroundPos);
+
+                if (Mathf.Abs(lastDir.x) < inputThreshold)
+                    lastDir -= Vector3.right *  lastDir.x;
+                if (Mathf.Abs(lastDir.z) < inputThreshold)
+                    lastDir -= Vector3.forward *  lastDir.z;
                 
                 
                 break;
@@ -65,7 +80,7 @@ public class M_Input : MonoBehaviour
 
         if(Physics.Raycast(ray, out _hit, 100, LayerMask.GetMask("Ground")))
         {
-            mouseGroundPos = _hit.point;
+            _mouseGroundPos = _hit.point;
             return true;
         }
 
