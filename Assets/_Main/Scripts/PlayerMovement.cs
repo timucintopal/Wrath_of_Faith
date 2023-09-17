@@ -43,7 +43,7 @@ public class PlayerMovement : Singleton<PlayerMovement>
     {
         M_Input.DirectionInput += Move;
         M_Input.MouseGroundInput += LookAt;
-
+        
         M_ModeBar.ModeChanged += SwitchMode;
     }
 

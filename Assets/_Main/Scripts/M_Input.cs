@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 public class M_Input : MonoBehaviour
 {
@@ -40,6 +41,9 @@ public class M_Input : MonoBehaviour
         switch (_currentMode)
         {
             case ProphetModes.Human:
+
+                #region Movement
+                
                 movementDirection = Vector3Int.zero;                
                 if (Input.GetKey(KeyCode.W))
                     movementDirection += Vector3Int.forward;
@@ -50,13 +54,13 @@ public class M_Input : MonoBehaviour
                 if (Input.GetKey(KeyCode.D))
                     movementDirection += Vector3Int.right;
 
-                // Vector3.SmoothDamp(lastDir, _movementDirection, ref refValue, speed);
-
                 lastDir = Vector3.Lerp(lastDir, movementDirection, speed * Time.deltaTime);
                 DirectionInput?.Invoke(lastDir);
-                
-                
-                if(Input.GetMouseButton(0))
+                #endregion
+
+                #region Rotation
+
+                if(Input.GetMouseButton(0) && !IsMouseOverUI())
                     if(Ray())
                         MouseGroundInput?.Invoke(_mouseGroundPos);
 
@@ -64,7 +68,8 @@ public class M_Input : MonoBehaviour
                     lastDir -= Vector3.right *  lastDir.x;
                 if (Mathf.Abs(lastDir.z) < inputThreshold)
                     lastDir -= Vector3.forward *  lastDir.z;
-                
+
+                #endregion
                 
                 break;
             case ProphetModes.God:
@@ -72,6 +77,12 @@ public class M_Input : MonoBehaviour
             default:
                 throw new ArgumentOutOfRangeException();
         }
+    }
+
+
+    bool IsMouseOverUI()
+    {
+        return EventSystem.current.IsPointerOverGameObject();
     }
 
     bool Ray()
