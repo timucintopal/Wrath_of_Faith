@@ -89,12 +89,13 @@ public class PlayerMovement : Singleton<PlayerMovement>
 
     IEnumerator ActivateProphet()
     {
-        Debug.Log("ACTIVE PROPHET");
         bool isStanded = false;
+        
         _animationController.Standed += ()=> isStanded = true;
+
+        transform.DOKill();
         
         transform.DOMoveY(20, 0);
-        
         transform.DOMoveY(1, .5f).SetEase(Ease.Linear);
         
         // yield return new WaitUntil()
@@ -112,6 +113,8 @@ public class PlayerMovement : Singleton<PlayerMovement>
     
     IEnumerator ActivateGodMode()
     {
+        transform.DOKill();
+        
         bool jumpStart = false;
         
         _animationController.OnJumpStart += ()=> jumpStart = true;
@@ -126,9 +129,7 @@ public class PlayerMovement : Singleton<PlayerMovement>
 
         yield return new WaitUntil(() => jumpStart);
         
-
         transform.DOMoveY(20, .5f).SetDelay(.1f).OnComplete(()=> PlayerStatus = PlayerStatus.God);
-        // yield return new WaitForSeconds(.75f);
 
         PlayerStatus = PlayerStatus.God;
     }

@@ -51,8 +51,8 @@ public class AnimationController : MonoBehaviour
 
         value /= divideVelo;
         
-        if(value != Vector3.zero)
-            Debug.Log("Velocity " + value);
+        // if(value != Vector3.zero)
+        //     Debug.Log("Velocity " + value);
 
         if (Mathf.Abs(value.x) < VelocityThreshold)
             value -= value.x * Vector3.right;

@@ -60,7 +60,7 @@ public class M_Input : MonoBehaviour
 
                 #region Rotation
 
-                if(Input.GetMouseButton(0) && !IsMouseOverUI())
+                if(Input.GetMouseButton(1) && !IsMouseOverUI())
                     if(Ray())
                         MouseGroundInput?.Invoke(_mouseGroundPos);
 

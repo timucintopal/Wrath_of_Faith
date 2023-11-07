@@ -1,19 +1,22 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class MouseOverUIElement : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+namespace _Main.Scripts
 {
-    [SerializeField] bool isMouseOver = false;
-
-    public bool IsMouseOverUIElement => isMouseOver;
-
-    public void OnPointerEnter(PointerEventData eventData)
+    public class MouseOverUIElement : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
-        isMouseOver = true;
-    }
+        [SerializeField] bool isMouseOver = false;
 
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        isMouseOver = false;
+        public bool IsMouseOverUIElement => isMouseOver;
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            isMouseOver = true;
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            isMouseOver = false;
+        }
     }
 }
