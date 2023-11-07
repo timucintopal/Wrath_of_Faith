@@ -12,3 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c860ebc3361a473d95731f2058ea5a1, type: 3}
   m_Name: CollectableUIData
   m_EditorClassIdentifier: 
+  collectables:
+  - Icon: {fileID: 21300000, guid: 9a0048333f72b4df8bcdff3ecdc91ad2, type: 3}
+    IconSize: {x: 100, y: 100}
+    Name: 
+  - Icon: {fileID: 21300000, guid: b6abb17ede5324329b1572d1eece4dee, type: 3}
+    IconSize: {x: 100, y: 100}
+    Name: 
+  - Icon: {fileID: 21300000, guid: 5d960292f9a2d466bb94c3a1cd145d0a, type: 3}
+    IconSize: {x: 100, y: 100}
+    Name: 

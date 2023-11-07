@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using _Main.Scripts.ScriptableObject;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace _Main.Scripts.UI
@@ -17,6 +18,7 @@ namespace _Main.Scripts.UI
             Init();
         }
 
+        [Button]
         void Init()
         {
             if (!_collectableData) _collectableData = Resources.Load<CollectableUISO>("SO/CollectableUIData");
@@ -28,7 +30,7 @@ namespace _Main.Scripts.UI
             }
             _collectableUis.Clear();
 
-            foreach (var collectable in _collectableData.Collectables)
+            foreach (var collectable in _collectableData.collectables)
             {
                 var script = Instantiate(_collectableUiObject, transform).GetComponent<CollectableUI>();
                 _collectableUis.Add(script);

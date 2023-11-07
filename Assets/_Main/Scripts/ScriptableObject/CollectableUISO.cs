@@ -1,9 +1,10 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace _Main.Scripts.ScriptableObject
 {
-    [SerializeField]
+    [Serializable]
     public class CollectableUIClass
     {
         public Sprite Icon;
@@ -15,6 +16,6 @@ namespace _Main.Scripts.ScriptableObject
     [CreateAssetMenu(fileName = "New Profile", menuName = "UI/Collectable")]
     public class CollectableUISO : UnityEngine.ScriptableObject
     {
-        public List<CollectableUIClass> Collectables = new List<CollectableUIClass>();
+        public List<CollectableUIClass> collectables = new List<CollectableUIClass>();
     }
 }
